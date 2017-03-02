@@ -16,6 +16,7 @@ RUN apt-get update && apt-get install -y \
     libxslt-dev \
     libicu-dev \
     libmcrypt-dev \
+    libfreetype6-dev \
     curl \
     libcurl4-gnutls-dev
 
