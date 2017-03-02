@@ -29,7 +29,7 @@ RUN ln -s /usr/share/zoneinfo/America/Los_angeles /etc/localtime
 RUN "date"
 
 # Type docker-php-ext-install to see available extensions
-RUN docker-php-ext-install pdo pdo_mysql bcmath bz2 gd xml xsl json intl soap mcrypt curl mbstring zip
+RUN docker-php-ext-install pdo pdo_mysql bcmath bz2 gd xml xsl json intl soap mcrypt curl mbstring zip calendar
 
 
 # install xdebug
