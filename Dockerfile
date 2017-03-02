@@ -11,7 +11,12 @@ RUN apt-get update && apt-get install -y \
     libsodium-dev \
     libpng-dev \
     libjpeg-dev \
-    libxml2-dev
+    libxml2-dev \
+    libxslt-dev \
+    libicu-dev \
+    libmcrypt-dev \
+    curl \
+    libcurl4-gnutls-dev
 
 
 # Install Composer
