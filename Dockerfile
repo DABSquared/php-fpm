@@ -98,10 +98,10 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
 RUN docker-php-ext-install pdo pdo_mysql bcmath bz2 gd xml xsl json intl soap mcrypt curl mbstring zip calendar
 
 RUN pecl install apcu-beta
-RUN docker-php-ext-enable apcu
+RUN docker-php-ext-enable --ini-name=20-apcu.ini apcu 
 
 RUN pecl install apcu_bc-1.0.3
-RUN docker-php-ext-enable apc
+RUN docker-php-ext-enable --ini-name=21-apc.ini apc
 
 # install xdebug
 RUN pecl install xdebug
