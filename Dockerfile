@@ -97,6 +97,9 @@ RUN "date"
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
 RUN docker-php-ext-install pdo pdo_mysql bcmath bz2 gd xml xsl json intl soap mcrypt curl mbstring zip calendar
 
+RUN pecl install apcu-beta
+RUN docker-php-ext-enable apcu
+
 # install xdebug
 RUN pecl install xdebug
 RUN docker-php-ext-enable xdebug
