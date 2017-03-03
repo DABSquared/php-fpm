@@ -78,7 +78,10 @@ RUN apt-get update && apt-get install -y \
     libmcrypt-dev \
     libfreetype6-dev \
     curl \
-    libcurl4-gnutls-dev
+    libcurl4-gnutls-dev \
+    pdftk \
+    graphviz \
+    acl
 
 
 # Install Composer
