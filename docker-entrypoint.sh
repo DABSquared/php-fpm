@@ -29,5 +29,5 @@ else
 fi
 
 if [ "$ISDEV" == "true" ]; then
-    php bin/console --env="$ENVIRONMENT" doctrine:fixtures:load --no-interaction --multiple-transactions
+    php bin/console --env="$ENVIRONMENT" doctrine:fixtures:load --no-interaction --multiple-transactions || true
 fi
