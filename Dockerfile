@@ -75,8 +75,8 @@ RUN apt-get update && apt-get install -y \
     libwebp-dev \
     libxslt-dev \
     libicu-dev \
-    libssh2 \
-    libssh2-dev \
+    libssh2-1 \
+    libssh2-1-dev \
     libmcrypt-dev \
     libfreetype6-dev \
     curl \
