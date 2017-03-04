@@ -105,7 +105,7 @@ RUN docker-php-ext-enable --ini-name=20-apcu.ini apcu
 RUN pecl install apcu_bc-1.0.3
 RUN docker-php-ext-enable --ini-name=21-apc.ini apc
 
-RUN pecl install ssh2
+RUN pecl install ssh2-1.0
 RUN docker-php-ext-enable ssh2
 
 # install xdebug
