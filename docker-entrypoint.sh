@@ -30,7 +30,7 @@ if [ "$1" = 'php-fpm' ]; then
     fi
 
     if [ "$ISDEV" == "true" ]; then
-        php bin/console --env="$ENVIRONMENT" doctrine:fixtures:load --no-interaction --multiple-transactions || exit 0
+        php bin/console --env="$ENVIRONMENT" doctrine:fixtures:load --no-interaction --multiple-transactions
     fi
 fi
 
