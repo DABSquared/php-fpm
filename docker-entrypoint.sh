@@ -28,8 +28,8 @@ else
     php bin/console --env="$ENVIRONMENT" cache:warmup --no-debug
 fi
 
-if [ "$ISDEV" == "true" ]; then
-    php bin/console --env="$ENVIRONMENT" doctrine:fixtures:load --no-interaction --multiple-transactions || exit 0
-fi
+#if [ "$ISDEV" == "true" ]; then
+#    php bin/console --env="$ENVIRONMENT" doctrine:fixtures:load --no-interaction --multiple-transactions || exit 0
+#fi
 
 exec "$@"
