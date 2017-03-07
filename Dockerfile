@@ -127,11 +127,8 @@ WORKDIR /var/www/symfony
 ENV ISDEV=false
 ENV ENVIRONMENT="prod"
 
-RUN usermod -u 1000 www-data
-
 COPY docker-entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
-USER www-data
 ENTRYPOINT ["/entrypoint.sh"]
 
 EXPOSE 9000
