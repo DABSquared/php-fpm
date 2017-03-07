@@ -91,9 +91,8 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 RUN composer --version
 
 # Set timezone
-RUN rm /etc/localtime
-RUN sudo echo "Etc/GMT+7" > /etc/timezone
-RUN sudo dpkg-reconfigure -f noninteractive tzdata
+ENV TZ=Etc/GMT+7
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN date
 
 # Type docker-php-ext-install to see available extensions
