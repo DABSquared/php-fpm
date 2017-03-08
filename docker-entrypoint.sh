@@ -1,5 +1,5 @@
 #!/bin/bash
-set -o pipefail
+set -euxo pipefail
 
 if [ "$1" = 'php-fpm' ]; then
     mkdir -p var/cache var/logs temp/
