@@ -135,7 +135,7 @@ ENTRYPOINT ["/entrypoint.sh"]
 EXPOSE 9000
 CMD ["php-fpm"]
 
-HEALTHCHECK --interval=10s --timeout=3s \
+HEALTHCHECK --interval=120s --timeout=3s --retries=5 \
     CMD \
     SCRIPT_NAME=/ping \
     SCRIPT_FILENAME=/ping \
