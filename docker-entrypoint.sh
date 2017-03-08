@@ -1,11 +1,6 @@
 #!/bin/bash
 set -euxo pipefail
 
-function finish {
-    exit 1
-}
-trap finish EXIT
-
 if [ "$1" = 'php-fpm' ]; then
     mkdir -p var/cache var/logs temp/
 
@@ -35,7 +30,7 @@ if [ "$1" = 'php-fpm' ]; then
     fi
 
     if [ "$ISDEV" == "true" ]; then
-        php bin/console --env="$ENVIRONMENT" doctrine:fixtures:load --no-interaction --multiple-transactions
+        php bin/console --env="$ENVIRONMENT" doctrine:fixtures:load --no-interaction --multiple-transactions || exit 1
     fi
 fi
 
