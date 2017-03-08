@@ -1,6 +1,11 @@
 #!/bin/bash
 set -euxo pipefail
 
+function finish {
+    exit 1
+}
+trap finish EXIT
+
 if [ "$1" = 'php-fpm' ]; then
     mkdir -p var/cache var/logs temp/
 
