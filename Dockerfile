@@ -127,6 +127,7 @@ WORKDIR /var/www/symfony
 
 ENV ISDEV=false
 ENV ENVIRONMENT="prod"
+ENV RELOADDATA=false
 
 COPY docker-entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
