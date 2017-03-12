@@ -6,6 +6,10 @@ if [ "$1" = 'php-fpm' ]; then
     mkdir -p var/cache var/logs temp/
 
     #TODO: Template the parameters file here...
+    
+    #Save off the db dir number.
+    numdirs=$(ls -l "$DB_DIR" | grep -v ^d | wc -l | xargs)
+    echo "Number of db directories is $numdirs"
 
 
     if [ "$ISDEV" == "true" ]; then
@@ -30,7 +34,6 @@ if [ "$1" = 'php-fpm' ]; then
     fi
 
     if [ "$ISDEV" == "true" ]; then
-            numdirs=$(ls -l "$DB_DIR" | grep -v ^d | wc -l | xargs)
             if  [ $numdirs -le 1 ]; then
                 php bin/console --env="$ENVIRONMENT" doctrine:fixtures:load --no-interaction --multiple-transactions || (echo >&2 "Doctrine Fixtures Failed" && exit 1)
             fi
