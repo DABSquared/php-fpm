@@ -34,7 +34,7 @@ if [ "$1" = 'php-fpm' ]; then
     fi
 
     if [ "$ISDEV" == "true" ]; then
-            if  [ $numdirs -le 1 ]; then
+            if  [ $numdirs -le 2 ]; then
                 php bin/console --env="$ENVIRONMENT" doctrine:fixtures:load --no-interaction --multiple-transactions || (echo >&2 "Doctrine Fixtures Failed" && exit 1)
             fi
     fi
