@@ -61,7 +61,7 @@ RUN /var/lib/dpkg/info/ca-certificates-java.postinst configure
 
 
 ####Our actual php stuff
-
+COPY php.ini /usr/local/etc/php/
 
 RUN apt-get update && apt-get install -y \
     git \
