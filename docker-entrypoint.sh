@@ -5,18 +5,19 @@ shopt -s nullglob
 if [ "$1" = 'php-fpm' ]; then
     mkdir -p var/cache var/logs temp/
 
-    symfony_opts='parameters:\n'
+    echo "parameters:" > app/config/parameters.yml
+    echo "parameters:" > app/config/parameters.yml.dist
 
     while IFS='=' read -r envvar_key envvar_value
     do
-        # Elasticsearch env vars need to have at least two dot separated lowercase words, e.g. `cluster.name`
-        if [[ ! -z $envvar_value ]]; then
-          symfony_opts="${symfony_opts}    ${envvar_key}: ${envvar_value} \n"
+        if [[ "$envvar_key" =~ ^[symfony]+\.[a-z]+ ]]
+        then
+              replaceWith=""
+              envvar_key=${envvar_key/symfony./${replaceWith}}
+              echo "    $envvar_key: '$envvar_value'" >> app/config/parameters.yml
+              echo "    $envvar_key: '$envvar_value'" >> app/config/parameters.yml.dist
         fi
     done < <(env)
-
-    echo symfony_opts > app/config/parameters.yml
-    echo symfony_opts > app/config/parameters.yml.dist
     
     #Save off the db dir number.
     numdirs=$(ls -l "$DB_DIR" | grep -v ^d | wc -l | xargs)
