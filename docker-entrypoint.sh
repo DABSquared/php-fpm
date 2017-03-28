@@ -15,7 +15,7 @@ if [ "$1" = 'php-fpm' ]; then
               replaceWith=""
               envvar_key=${envvar_key/symfony./${replaceWith}}
 
-              if [["$envvar_value" -eq "true" || "$envvar_value" -eq "false" ]]
+              if [[ "$envvar_value" -eq "true" || "$envvar_value" -eq "false" ]]
                   echo "    $envvar_key: $envvar_value" >> app/config/parameters.yml
                   echo "    $envvar_key: $envvar_value" >> app/config/parameters.yml.dist
               then
