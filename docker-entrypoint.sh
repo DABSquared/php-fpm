@@ -10,10 +10,10 @@ if [ "$1" = 'php-fpm' ]; then
 
     while IFS='=' read -r envvar_key envvar_value
     do
-        if [[ "$envvar_key" =~ ^[symfony]+\.[a-z]+ ]]
+        if [[ "$envvar_key" =~ ^[symfony]+\_[a-z]+ ]]
         then
               replaceWith=""
-              envvar_key=${envvar_key/symfony./${replaceWith}}
+              envvar_key=${envvar_key/symfony_/${replaceWith}}
 
               if [ "$envvar_value" == "true" ] || [ "$envvar_value" == "false" ]
               then
