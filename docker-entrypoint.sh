@@ -60,4 +60,6 @@ if [ "$1" = 'php-fpm' ]; then
     fi
 fi
 
+chmod -R 777 var/cache
+
 exec "$@"
