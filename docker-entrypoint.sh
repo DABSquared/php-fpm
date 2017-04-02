@@ -30,24 +30,24 @@ if [ "$1" = 'php-fpm' ]; then
 
 
     if [ "$ISDEV" == "true" ]; then
-       composer install --optimize-autoloader --no-interaction || (echo >&2 "Composer Install Failed" && exit 1)
+       composer install --optimize-autoloader --no-interaction || (echo >&2 "Composer Install Dev Failed" && exit 1)
     else
-       composer install --optimize-autoloader --no-interaction --no-dev || (echo >&2 "Composer Install Failed" && exit 1)
+       composer install --optimize-autoloader --no-interaction --no-dev || (echo >&2 "Composer Install Prod Failed" && exit 1)
     fi
 
     php bin/console --env="$ENVIRONMENT" doctrine:migrations:migrate --no-interaction || (echo >&2 "Doctrine Migrations Failed" && exit 1)
     php bin/console --env="$ENVIRONMENT" assets:install web || (echo >&2 "Assetic Install Failed" && exit 1)
 
     if [ "$ISDEV" == "true" ]; then
-        php bin/console --env="$ENVIRONMENT" assetic:dump --no-interaction || (echo >&2 "Assetic Dump Failed" && exit 1)
+        php bin/console --env="$ENVIRONMENT" assetic:dump --no-interaction || (echo >&2 "Assetic Dump Dev Failed" && exit 1)
     else
-        php bin/console --env="$ENVIRONMENT" assetic:dump --no-interaction --no-debug || (echo >&2 "Assetic Dump Failed" && exit 1)
+        php bin/console --env="$ENVIRONMENT" assetic:dump --no-interaction --no-debug || (echo >&2 "Assetic Dump Prod Failed" && exit 1)
     fi
 
     if [ "$ISDEV" == "true" ]; then
-        php bin/console --env="$ENVIRONMENT" cache:warmup || (echo >&2 "Cache Warmup Failed" && exit 1)
+        php bin/console --env="$ENVIRONMENT" cache:warmup || (echo >&2 "Cache Warmup Dev Failed" && exit 1)
     else
-        php bin/console --env="$ENVIRONMENT" cache:warmup --no-debug || (echo >&2 "Cache Warmup Failed" && exit 1)
+        php bin/console --env="$ENVIRONMENT" cache:warmup --no-debug || (echo >&2 "Cache Warmup Prod Failed" && exit 1)
     fi
 
     if [ "$ISDEV" == "true" ]; then
