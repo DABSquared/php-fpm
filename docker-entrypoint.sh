@@ -1,8 +1,10 @@
 #!/bin/bash
 set -eo pipefail
 shopt -s nullglob
+rm -rf .php_setup
 
 if [ "$1" = 'php-fpm' ]; then
+
     mkdir -p var/cache var/logs temp/
 
     echo "parameters:" > app/config/parameters.yml
@@ -61,5 +63,7 @@ if [ "$1" = 'php-fpm' ]; then
 fi
 
 chmod -R 777 var/cache
+
+echo "1" > .php_setup
 
 exec "$@"
