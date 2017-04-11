@@ -138,7 +138,7 @@ CMD ["php-fpm"]
 
 HEALTHCHECK --interval=320s --timeout=10s --retries=10 \
     CMD \
-    SCRIPT_NAME=/ping \
-    SCRIPT_FILENAME=/ping \
+    SCRIPT_NAME=/app.php \
+    SCRIPT_FILENAME=/app.php \
     REQUEST_METHOD=GET \
     cgi-fcgi -bind -connect 127.0.0.1:9000 || exit 1
