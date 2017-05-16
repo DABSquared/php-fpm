@@ -132,7 +132,6 @@ ENV DB_DIR=".data/db/"
 
 COPY docker-entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
-USER www-data
 ENTRYPOINT ["/entrypoint.sh"]
 
 EXPOSE 9000
