@@ -124,6 +124,7 @@ RUN mv /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini /usr/local/etc/php/do
 
 RUN echo 'alias sf3="php bin/console"' >> ~/.bashrc
 
+USER www-data
 WORKDIR /var/www/symfony
 
 ENV ISDEV=false
