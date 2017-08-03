@@ -16,6 +16,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		bzip2 \
 		unzip \
 		xz-utils \
+		git \
 	&& rm -rf /var/lib/apt/lists/*
 
 RUN echo 'deb http://deb.debian.org/debian jessie-backports main' > /etc/apt/sources.list.d/jessie-backports.list
@@ -116,6 +117,8 @@ RUN set -ex \
 
 
 #######Ruby
+RUN apt-get update && apt-get install -y libssl-dev libreadline-dev zlib1g-dev
+
 RUN git clone git://github.com/rbenv/rbenv.git /usr/local/rbenv \
 &&  git clone git://github.com/rbenv/ruby-build.git /usr/local/rbenv/plugins/ruby-build \
 &&  git clone git://github.com/jf/rbenv-gemset.git /usr/local/rbenv/plugins/rbenv-gemset \
@@ -138,6 +141,7 @@ RUN eval "$(rbenv init -)"; rbenv install 2.4.1 \
 &&  eval "$(rbenv init -)"; rbenv global 2.4.1 \
 &&  eval "$(rbenv init -)"; gem update --system \
 &&  eval "$(rbenv init -)"; gem install bundler
+
 
 
 ####Our actual php stuff
