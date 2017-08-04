@@ -182,7 +182,7 @@ RUN date
 
 # Type docker-php-ext-install to see available extensions
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
-RUN docker-php-ext-install pdo pdo_mysql bcmath bz2 gd xml xsl json intl soap mcrypt curl mbstring zip calendar pcntl shmop
+RUN docker-php-ext-install pdo pdo_mysql bcmath bz2 gd xml xsl json intl soap mcrypt curl mbstring zip calendar pcntl shmop exif
 
 RUN pecl install apcu-beta
 RUN docker-php-ext-enable --ini-name=20-apcu.ini apcu 
