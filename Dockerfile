@@ -207,6 +207,7 @@ RUN echo "xdebug.remote_port=9001" >> /usr/local/etc/php/conf.d/docker-php-ext-x
 RUN mv /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini /usr/local/etc/php/docker-php-ext-xdebug.ini
 
 RUN echo 'alias sf3="php bin/console"' >> ~/.bashrc
+RUN echo '{ "allow_root": true }' > ~/.bowerrc
 
 WORKDIR /var/www/symfony
 
