@@ -215,6 +215,9 @@ ENV ISDEV=false
 ENV ENVIRONMENT="prod"
 ENV DB_DIR=".data/db/"
 
+COPY setup.sh /setup.sh
+RUN chmod +x /setup.sh
+
 COPY docker-entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
