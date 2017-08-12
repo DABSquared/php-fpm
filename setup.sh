@@ -58,13 +58,4 @@ else
     php -d newrelic.appname="$symfony_app_name" bin/console --env="$ENVIRONMENT" cache:warmup --no-debug || (echo >&2 "Cache Warmup Prod Failed" && exit 1)
 fi
 
-if [ "$ISDEV" == "true" ]; then
-        #Save off the db dir number.
-        numdirs=$(ls -l "$DB_DIR" | grep -v ^d | wc -l | xargs)
-        echo "Number of db directories is $numdirs"
-        if  [ $numdirs -le 2 ]; then
-            php -d newrelic.appname="$symfony_app_name" bin/console --env="$ENVIRONMENT" doctrine:fixtures:load --no-interaction --multiple-transactions || (echo >&2 "Doctrine Fixtures Failed" && exit 1)
-        fi
-fi
-
 chmod -R 777 var/cache

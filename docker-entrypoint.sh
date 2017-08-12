@@ -9,6 +9,14 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ];  then
         echo "No GIT Repository defined, not pulling."
         rm -rf .php_setup
         /setup.sh
+        if [ "$ISDEV" == "true" ]; then
+            #Save off the db dir number.
+            numdirs=$(ls -l "$DB_DIR" | grep -v ^d | wc -l | xargs)
+            echo "Number of db directories is $numdirs"
+            if  [ $numdirs -le 2 ]; then
+                php -d newrelic.appname="$symfony_app_name" bin/console --env="$ENVIRONMENT" doctrine:fixtures:load --no-interaction --multiple-transactions || (echo >&2 "Doctrine Fixtures Failed" && exit 1)
+            fi
+        fi
         echo "1" > .php_setup
     else
         echo "Pulling GIT Repository to /var/www/symfony"
