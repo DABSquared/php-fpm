@@ -25,7 +25,8 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ];  then
         chmod -R 600 ~/.ssh/id_rsa
         [[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
         cd /var/www
-        git clone "$GIT_REPO" symfony
+        git clone "$GIT_REPO" code
+        cp -rf code/* symfony/*
         /setup.sh
     fi
 
