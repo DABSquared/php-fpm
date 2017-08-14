@@ -22,6 +22,7 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ];  then
         echo "Pulling GIT Repository to /var/www/symfony"
         mkdir -p ~/.ssh
         echo "$GIT_SSH_KEY" > ~/.ssh/id_rsa
+        echo cat ~/.ssh/id_rsa
         chmod -R 600 ~/.ssh/id_rsa
         [[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
         cd /var/www
