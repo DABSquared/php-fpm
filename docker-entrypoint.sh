@@ -23,7 +23,6 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ];  then
         mkdir -p ~/.ssh
         eval "$(ssh-agent)" && ssh-agent -s
         echo "$GIT_SSH_KEY" > ~/.ssh/id_rsa
-        echo "$(cat ~/.ssh/id_rsa)"
         chmod -R 0600 ~/.ssh/id_rsa
         ssh-add ~/.ssh/id_rsa
         [[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
