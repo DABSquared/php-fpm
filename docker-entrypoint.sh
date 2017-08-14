@@ -21,9 +21,11 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ];  then
     else
         echo "Pulling GIT Repository to /var/www/symfony"
         mkdir -p ~/.ssh
+        eval "$(ssh-agent)" && ssh-agent -s
         echo "$GIT_SSH_KEY" > ~/.ssh/id_rsa
         echo cat ~/.ssh/id_rsa
-        chmod -R 600 ~/.ssh/id_rsa
+        chmod -R 0600 ~/.ssh/id_rsa
+        ssh-add ~/.ssh/id_rsa
         [[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
         cd /var/www
         git clone "$GIT_REPO" code
