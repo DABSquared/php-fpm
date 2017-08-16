@@ -59,3 +59,5 @@ else
 fi
 
 chmod -R 777 var/cache
+chmod -R 777 var/logs
+chmod -R 777 temp
