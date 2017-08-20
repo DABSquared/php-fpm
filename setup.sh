@@ -31,11 +31,8 @@ done < <(env)
 
 bundle install --binstubs --no-cache
 rm -rf node_modules
-npm install --prefix app/Resources bower
-npm install --prefix app/Resources node-uuid
-npm install --prefix app/Resources uglify-js
-npm install --prefix app/Resources uglifycss
 
+yarn install
 
 if [ "$ISDEV" == "true" ]; then
    composer install --optimize-autoloader --no-interaction || (echo >&2 "Composer Install Dev Failed" && exit 1)
