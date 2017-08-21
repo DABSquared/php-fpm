@@ -32,7 +32,15 @@ done < <(env)
 bundle install --binstubs --no-cache
 rm -rf node_modules
 
-yarn install
+
+
+if [ "$ISDEV" == "true" ]; then
+   yarn install --dev
+   yarn run encore dev
+else
+   yarn install
+   yarn run encore prodution
+fi
 
 if [ "$ISDEV" == "true" ]; then
    composer install --optimize-autoloader --no-interaction || (echo >&2 "Composer Install Dev Failed" && exit 1)
