@@ -51,6 +51,12 @@ fi
 php -d newrelic.appname="$symfony_app_name" bin/console --env="$ENVIRONMENT" doctrine:migrations:migrate --no-interaction || (echo >&2 "Doctrine Migrations Failed" && exit 1)
 php -d newrelic.appname="$symfony_app_name" bin/console --env="$ENVIRONMENT" assets:install web || (echo >&2 "Assetic Install Failed" && exit 1)
 
+ if [ "$ISDEV" == "true" ]; then
+     php -d newrelic.appname="$symfony_app_name" bin/console --env="$ENVIRONMENT" assetic:dump --no-interaction || (echo >&2 "Assetic Dump Dev Failed" && exit 1)
+ else
+     php -d newrelic.appname="$symfony_app_name" bin/console --env="$ENVIRONMENT" assetic:dump --no-interaction --no-debug || (echo >&2 "Assetic Dump Prod Failed" && exit 1)
+ fi
+
 if [ "$ISDEV" == "true" ]; then
     php -d newrelic.appname="$symfony_app_name" bin/console --env="$ENVIRONMENT" cache:warmup || (echo >&2 "Cache Warmup Dev Failed" && exit 1)
 else
