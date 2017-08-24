@@ -33,6 +33,11 @@ bundle install --binstubs --no-cache
 rm -rf node_modules
 
 
+if [ "$ISDEV" == "true" ]; then
+   composer install --optimize-autoloader --no-interaction || (echo >&2 "Composer Install Dev Failed" && exit 1)
+else
+   composer install --optimize-autoloader --no-interaction --no-dev || (echo >&2 "Composer Install Prod Failed" && exit 1)
+fi
 
 if [ "$ISDEV" == "true" ]; then
    yarn install --dev
@@ -40,12 +45,6 @@ if [ "$ISDEV" == "true" ]; then
 else
    yarn install
    yarn run encore prodution
-fi
-
-if [ "$ISDEV" == "true" ]; then
-   composer install --optimize-autoloader --no-interaction || (echo >&2 "Composer Install Dev Failed" && exit 1)
-else
-   composer install --optimize-autoloader --no-interaction --no-dev || (echo >&2 "Composer Install Prod Failed" && exit 1)
 fi
 
 php -d newrelic.appname="$symfony_app_name" bin/console --env="$ENVIRONMENT" doctrine:migrations:migrate --no-interaction || (echo >&2 "Doctrine Migrations Failed" && exit 1)
