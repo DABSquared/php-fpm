@@ -40,10 +40,10 @@ else
 fi
 
 if [ "$ISDEV" == "true" ]; then
-   yarn install --dev
+   yarn install --dev --verbose
    yarn run encore dev
 else
-   yarn install
+   yarn install --verbose
    yarn run encore prodution
 fi
 
