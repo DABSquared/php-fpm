@@ -44,7 +44,7 @@ if [ "$ISDEV" == "true" ]; then
    yarn run encore dev
 else
    yarn install --verbose
-   yarn run encore prodution
+   yarn run encore production
 fi
 
 php -d newrelic.appname="$symfony_app_name" bin/console --env="$ENVIRONMENT" doctrine:migrations:migrate --no-interaction || (echo >&2 "Doctrine Migrations Failed" && exit 1)
