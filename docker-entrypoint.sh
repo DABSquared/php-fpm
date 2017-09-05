@@ -9,6 +9,7 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ];  then
         echo "No GIT Repository defined, not pulling."
         rm -rf .php_setup
         /setup.sh
+        cd /var/www/symfony
         if [ "$ISDEV" == "true" ]; then
             #Save off the db dir number.
             numdirs=$(ls -l "$DB_DIR" | grep -v ^d | wc -l | xargs)
