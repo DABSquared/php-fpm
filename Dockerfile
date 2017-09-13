@@ -195,6 +195,9 @@ RUN docker-php-ext-enable --ini-name=21-apc.ini apc
 RUN pecl install ssh2-1.0
 RUN docker-php-ext-enable ssh2
 
+RUN pecl install redis
+RUN docker-php-ext-enable redis
+
 # # install xdebug
 RUN pecl install xdebug
 RUN docker-php-ext-enable xdebug
