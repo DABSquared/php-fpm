@@ -8,17 +8,17 @@ bundle install --binstubs --no-cache
 rm -rf node_modules
 
 if [ "$ISDEV" == "true" ]; then
+   composer install --optimize-autoloader --no-interaction --no-scripts || (echo >&2 "Composer Install Dev Failed" && exit 1)
+else
+   composer install --optimize-autoloader --no-interaction --no-dev --no-scripts || (echo >&2 "Composer Install Prod Failed" && exit 1)
+fi
+
+if [ "$ISDEV" == "true" ]; then
    yarn install --dev
    yarn run encore dev
 else
    yarn install
    yarn run encore production
-fi
-
-if [ "$ISDEV" == "true" ]; then
-   composer install --optimize-autoloader --no-interaction --no-scripts || (echo >&2 "Composer Install Dev Failed" && exit 1)
-else
-   composer install --optimize-autoloader --no-interaction --no-dev --no-scripts || (echo >&2 "Composer Install Prod Failed" && exit 1)
 fi
 
 chmod -R 777 var/cache
