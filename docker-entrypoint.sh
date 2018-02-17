@@ -4,32 +4,36 @@ shopt -s nullglob
 
 if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ];  then
 
-    if [[ -z "$GIT_REPO" && -z "$GIT_SSH_KEY" ]]
-    then
-        echo "No GIT Repository defined, not pulling."
+	php -d newrelic.appname="$symfony_app_name" bin/console --env="$ENVIRONMENT" doctrine:migrations:migrate --no-interaction || (echo >&2 "Doctrine Migrations Failed" && exit 1)
+    if [ "$ISDEV" == "true" ]; then
         rm -rf .php_setup
-        /setup.sh
-        cd /var/www/symfony
-        if [ "$ISDEV" == "true" ]; then
-            #Save off the db dir number.
-            numdirs=$(ls -l "$DB_DIR" | grep -v ^d | wc -l | xargs)
-            echo "Number of db directories is $numdirs"
-            if  [ $numdirs -le 2 ]; then
-                php -d newrelic.appname="$symfony_app_name" bin/console --env="$ENVIRONMENT" doctrine:fixtures:load --no-interaction --multiple-transactions || (echo >&2 "Doctrine Fixtures Failed" && exit 1)
-            fi
-        fi
+        cp /setup.sh ./setup.sh
+        chmod a+x ./setup.sh
+        ./setup.sh
+		#Save off the db dir number.
+		numdirs=$(ls -l "$DB_DIR" | grep -v ^d | wc -l | xargs)
+		echo "Number of db directories is $numdirs"
+		if  [ $numdirs -le 2 ]; then
+			php -d newrelic.appname="$symfony_app_name" bin/console --env="$ENVIRONMENT" doctrine:fixtures:load --no-interaction --multiple-transactions || (echo >&2 "Doctrine Fixtures Failed" && exit 1)
+		fi
+    fi
+    
+    php -d newrelic.appname="$symfony_app_name" bin/console --env="$ENVIRONMENT" assets:install web || (echo >&2 "Assetic Install Failed" && exit 1)
+
+	if [ "$ISDEV" == "true" ]; then
+		php -d newrelic.appname="$symfony_app_name" bin/console --env="$ENVIRONMENT" assetic:dump --no-interaction || (echo >&2 "Assetic Dump Dev Failed" && exit 1)
+	else
+		php -d newrelic.appname="$symfony_app_name" bin/console --env="$ENVIRONMENT" assetic:dump --no-interaction --no-debug || (echo >&2 "Assetic Dump Prod Failed" && exit 1)
+	fi
+
+	if [ "$ISDEV" == "true" ]; then
+		php -d newrelic.appname="$symfony_app_name" bin/console --env="$ENVIRONMENT" cache:warmup || (echo >&2 "Cache Warmup Dev Failed" && exit 1)
+	else
+		php -d newrelic.appname="$symfony_app_name" bin/console --env="$ENVIRONMENT" cache:warmup --no-debug || (echo >&2 "Cache Warmup Prod Failed" && exit 1)
+	fi
+
+    if [ "$ISDEV" == "true" ]; then
         echo "1" > .php_setup
-    else
-        echo "Pulling GIT Repository to /var/www/symfony"
-        mkdir -p ~/.ssh
-        eval "$(ssh-agent)" && ssh-agent -s
-        echo "$GIT_SSH_KEY" > ~/.ssh/id_rsa
-        chmod -R 0600 ~/.ssh/id_rsa
-        ssh-add ~/.ssh/id_rsa
-        [[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-        cd /var/www
-        git clone --depth 1 "$GIT_REPO" symfony
-        /setup.sh
     fi
 
 fi
