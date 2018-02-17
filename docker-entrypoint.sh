@@ -3,13 +3,16 @@ set -eo pipefail
 shopt -s nullglob
 
 if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ];  then
-
+   
+	if [ "$ISDEV" == "true" ]; then
+		rm -rf .php_setup
+		cp /setup.sh ./setup.sh
+		chmod a+x ./setup.sh
+		./setup.sh
+	fi
+	
 	php -d newrelic.appname="$symfony_app_name" bin/console --env="$ENVIRONMENT" doctrine:migrations:migrate --no-interaction || (echo >&2 "Doctrine Migrations Failed" && exit 1)
     if [ "$ISDEV" == "true" ]; then
-        rm -rf .php_setup
-        cp /setup.sh ./setup.sh
-        chmod a+x ./setup.sh
-        ./setup.sh
 		#Save off the db dir number.
 		numdirs=$(ls -l "$DB_DIR" | grep -v ^d | wc -l | xargs)
 		echo "Number of db directories is $numdirs"
