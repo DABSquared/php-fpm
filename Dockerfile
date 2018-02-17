@@ -18,6 +18,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		bzip2 \
 		unzip \
 		xz-utils \
+		git \
+		openssh-client \
+		ssh-askpass \
+		gnupg \
+		dirmngr \
+
 	&& rm -rf /var/lib/apt/lists/*
 
 # Default to UTF-8 file.encoding
@@ -156,11 +162,10 @@ RUN echo 'export RBENV_ROOT=/usr/local/rbenv' >> /root/.bashrc \
 ENV CONFIGURE_OPTS --disable-install-doc
 ENV PATH /usr/local/rbenv/bin:/usr/local/rbenv/shims:$PATH
 
-RUN eval "$(rbenv init -)"; rbenv install 2.4.1 \
-&&  eval "$(rbenv init -)"; rbenv global 2.4.1 \
-&&  eval "$(rbenv init -)"; gem update --system \
-&&  eval "$(rbenv init -)"; gem install bundler
-
+RUN rbenv init - && rbenv install 2.4.1
+RUN rbenv init - && rbenv global 2.4.1
+RUN rbenv init - && gem update --system
+RUN rbenv init - && gem install bundler --force
 
 
 ####Our actual php stuff
@@ -201,7 +206,7 @@ RUN date
 
 # Type docker-php-ext-install to see available extensions
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
-RUN docker-php-ext-install pdo pdo_mysql bcmath bz2 gd xml xsl json intl soap mcrypt curl mbstring zip calendar pcntl shmop exif
+RUN docker-php-ext-install pdo pdo_mysql bcmath bz2 gd xml xsl json intl soap curl mbstring zip calendar pcntl shmop exif
 
 RUN pecl install apcu-beta
 RUN docker-php-ext-enable --ini-name=20-apcu.ini apcu 
@@ -214,6 +219,9 @@ RUN docker-php-ext-enable ssh2
 
 RUN pecl install redis
 RUN docker-php-ext-enable redis
+
+RUN pecl install mcrypt-1.0.1
+RUN docker-php-ext-enable mcrypt
 
 # # install xdebug
 RUN pecl install xdebug
