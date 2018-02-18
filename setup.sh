@@ -21,8 +21,10 @@ else
    yarn run encore production
 fi
 
+php bin/console --env="$ENVIRONMENT" assets:install web
+
 if [ "$ISDEV" == "true" ]; then
-	php bin/console --env="$ENVIRONMENT" assetic:dump --no-interaction
+   php bin/console --env="$ENVIRONMENT" assetic:dump --no-interaction
 else
    php bin/console --env="$ENVIRONMENT" assetic:dump --no-interaction --no-debug
 fi
