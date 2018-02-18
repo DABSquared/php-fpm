@@ -2,7 +2,7 @@
 set -eo pipefail
 shopt -s nullglob
 
-if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ];  then
+if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' || ["$1" = 'alternative.sh'] ];  then
    
 	if [ "$ISDEV" == "true" ]; then
 		rm -rf .php_setup
