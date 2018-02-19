@@ -8,9 +8,9 @@ bundle install --binstubs --no-cache
 rm -rf node_modules
 
 if [ "$ISDEV" == "true" ]; then
-   composer install --optimize-autoloader --no-interaction --no-scripts || (echo >&2 "Composer Install Dev Failed" && exit 1)
+   composer install --optimize-autoloader --no-interaction || (echo >&2 "Composer Install Dev Failed" && exit 1)
 else
-   composer install --optimize-autoloader --no-interaction --no-dev --no-scripts || (echo >&2 "Composer Install Prod Failed" && exit 1)
+   composer install --optimize-autoloader --no-interaction --no-dev || (echo >&2 "Composer Install Prod Failed" && exit 1)
 fi
 
 if [ "$ISDEV" == "true" ]; then
