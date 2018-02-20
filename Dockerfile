@@ -23,6 +23,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		ssh-askpass \
 		gnupg \
 		dirmngr \
+		procps \
 
 	&& rm -rf /var/lib/apt/lists/*
 
