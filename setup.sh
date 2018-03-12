@@ -11,6 +11,7 @@ if [ "$ISDEV" == "true" ]; then
    composer install --optimize-autoloader --no-interaction || (echo >&2 "Composer Install Dev Failed" && exit 1)
 else
    composer install --optimize-autoloader --no-interaction --no-dev || (echo >&2 "Composer Install Prod Failed" && exit 1)
+   composer dump-autoload --optimize --no-dev --classmap-authoritative || (echo >&2 "Composer AutoDump Prod Failed" && exit 1)
 fi
 
 if [ "$ISDEV" == "true" ]; then

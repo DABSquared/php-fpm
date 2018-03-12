@@ -9,6 +9,8 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'alternative.sh' ] ;  th
 		cp /setup.sh ./setup.sh
 		chmod a+x ./setup.sh
 		./setup.sh
+	else
+      echo "opcache.validate_timestamps=0" >> /usr/local/etc/php/php.ini
 	fi
 	
 	php -d newrelic.appname="$symfony_app_name" bin/console --env="$ENVIRONMENT" doctrine:migrations:migrate --no-interaction || (echo >&2 "Doctrine Migrations Failed" && exit 1)
