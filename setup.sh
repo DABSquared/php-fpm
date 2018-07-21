@@ -22,12 +22,16 @@ else
    yarn run encore production
 fi
 
-php bin/console --env="$ENVIRONMENT" assets:install web
+if [ "$ASSECTIC" == "true" ]; then
+   php bin/console --env="$ENVIRONMENT" assetic:install web
+fi
 
-if [ "$ISDEV" == "true" ]; then
-   php bin/console --env="$ENVIRONMENT" assetic:dump --no-interaction
-else
-   php bin/console --env="$ENVIRONMENT" assetic:dump --no-interaction --no-debug
+if [ "$ASSECTIC" == "true" ]; then
+	if [ "$ISDEV" == "true" ]; then
+   		php bin/console --env="$ENVIRONMENT" assetic:dump --no-interaction
+	else
+   		php bin/console --env="$ENVIRONMENT" assetic:dump --no-interaction --no-debug
+	fi
 fi
 
 chmod -R 777 var/cache

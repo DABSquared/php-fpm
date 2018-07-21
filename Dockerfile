@@ -24,7 +24,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		gnupg \
 		dirmngr \
 		procps \
-
 	&& rm -rf /var/lib/apt/lists/*
 
 # Default to UTF-8 file.encoding
@@ -42,10 +41,10 @@ RUN { \
 
 # do some fancy footwork to create a JAVA_HOME that's cross-architecture-safe
 RUN ln -svT "/usr/lib/jvm/java-8-openjdk-$(dpkg --print-architecture)" /docker-java-home
-ENV JAVA_HOME /docker-java-home
+ENV JAVA_HOME /docker-java-home/jre
 
-ENV JAVA_VERSION 8u151
-ENV JAVA_DEBIAN_VERSION 8u151-b12-1~deb9u1
+ENV JAVA_VERSION 8u171
+ENV JAVA_DEBIAN_VERSION 8u171-b11-1~deb9u1
 
 # see https://bugs.debian.org/775775
 # and https://github.com/docker-library/java/issues/19#issuecomment-70546872
@@ -59,8 +58,8 @@ RUN set -ex; \
 	fi; \
 	\
 	apt-get update; \
-	apt-get install -y \
-		openjdk-8-jdk="$JAVA_DEBIAN_VERSION" \
+	apt-get install -y --no-install-recommends \
+		openjdk-8-jre-headless="$JAVA_DEBIAN_VERSION" \
 		ca-certificates-java="$CA_CERTIFICATES_JAVA_VERSION" \
 	; \
 	rm -rf /var/lib/apt/lists/*; \
@@ -76,10 +75,13 @@ RUN set -ex; \
 # see CA_CERTIFICATES_JAVA_VERSION notes above
 RUN /var/lib/dpkg/info/ca-certificates-java.postinst configure
 
-
-
+# If you're reading this and have any feedback on how this image could be
+# improved, please open an issue or a pull request so we can discuss it!
+#
+#   https://github.com/docker-library/openjdk/issues
 
 ######Node
+
 RUN groupadd --gid 1000 node \
   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
@@ -94,53 +96,56 @@ RUN set -ex \
     B9AE9905FFD7803F25714661B63B535A4C206CA9 \
     56730D5401028683275BD23C23EFEFE93C4CFFFE \
     77984A986EBC2AA786BC0F66B01FBB92821C587A \
+    8FCCA13FEF1D0C2E91008E09770F7A9A5AE15600 \
   ; do \
-    gpg --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" || \
-    gpg --keyserver hkp://keyserver.pgp.com:80 --recv-keys "$key" || \
+    gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" || \
     gpg --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$key" || \
-    gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" ; \
+    gpg --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" ; \
   done
 
-ENV NODE_VERSION 9.8.0
+ENV NODE_VERSION 10.6.0
 
-RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
-  && case "${dpkgArch##*-}" in \
-    amd64) ARCH='x64';; \
-    ppc64el) ARCH='ppc64le';; \
-    s390x) ARCH='s390x';; \
-    arm64) ARCH='arm64';; \
-    armhf) ARCH='armv7l';; \
-    i386) ARCH='x86';; \
-    *) echo "unsupported architecture"; exit 1 ;; \
-  esac \
-  && curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-$ARCH.tar.xz" \
-  && curl -SLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
-  && gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc \
-  && grep " node-v$NODE_VERSION-linux-$ARCH.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
-  && tar -xJf "node-v$NODE_VERSION-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
-  && rm "node-v$NODE_VERSION-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
-  && ln -s /usr/local/bin/node /usr/local/bin/nodejs
+RUN buildDeps='xz-utils' \
+    && ARCH= && dpkgArch="$(dpkg --print-architecture)" \
+    && case "${dpkgArch##*-}" in \
+      amd64) ARCH='x64';; \
+      ppc64el) ARCH='ppc64le';; \
+      s390x) ARCH='s390x';; \
+      arm64) ARCH='arm64';; \
+      armhf) ARCH='armv7l';; \
+      i386) ARCH='x86';; \
+      *) echo "unsupported architecture"; exit 1 ;; \
+    esac \
+    && set -x \
+    && apt-get update && apt-get install -y ca-certificates curl wget $buildDeps --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/* \
+    && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-$ARCH.tar.xz" \
+    && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
+    && gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc \
+    && grep " node-v$NODE_VERSION-linux-$ARCH.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
+    && tar -xJf "node-v$NODE_VERSION-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
+    && rm "node-v$NODE_VERSION-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
+    && apt-get purge -y --auto-remove $buildDeps \
+    && ln -s /usr/local/bin/node /usr/local/bin/nodejs
 
-ENV YARN_VERSION 1.5.1
+ENV YARN_VERSION 1.7.0
 
 RUN set -ex \
   && for key in \
     6A010C5166006599AA17F08146C2130DFD2497F5 \
   ; do \
-    gpg --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" || \
-    gpg --keyserver hkp://keyserver.pgp.com:80 --recv-keys "$key" || \
+    gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" || \
     gpg --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$key" || \
-    gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" ; \
+    gpg --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" ; \
   done \
-  && curl -fSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \
-  && curl -fSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz.asc" \
+  && curl -fsSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \
+  && curl -fsSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz.asc" \
   && gpg --batch --verify yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz \
-  && mkdir -p /opt/yarn \
-  && tar -xzf yarn-v$YARN_VERSION.tar.gz -C /opt/yarn --strip-components=1 \
-  && ln -s /opt/yarn/bin/yarn /usr/local/bin/yarn \
-  && ln -s /opt/yarn/bin/yarn /usr/local/bin/yarnpkg \
+  && mkdir -p /opt \
+  && tar -xzf yarn-v$YARN_VERSION.tar.gz -C /opt/ \
+  && ln -s /opt/yarn-v$YARN_VERSION/bin/yarn /usr/local/bin/yarn \
+  && ln -s /opt/yarn-v$YARN_VERSION/bin/yarnpkg /usr/local/bin/yarnpkg \
   && rm yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz
-
 
 #######Ruby
 RUN apt-get update && apt-get install -y libssl-dev libreadline-dev zlib1g-dev
@@ -240,8 +245,12 @@ RUN echo 'alias sf3="php bin/console"' >> ~/.bashrc
 RUN echo '{ "allow_root": true }' > ~/.bowerrc
 
 ENV ISDEV=false
+ENV ASSECTIC=true
 ENV ENVIRONMENT="prod"
 ENV DB_DIR=".data/db/"
+ENV APP_ENV="prod"
+ENV APP_DEBUG=false
+ENV APP_FILE="app.php"
 
 COPY setup.sh /setup.sh
 RUN chmod +x /setup.sh
@@ -257,7 +266,7 @@ CMD ["php-fpm"]
 
 HEALTHCHECK --interval=320s --timeout=10s --retries=10 \
     CMD \
-    SCRIPT_NAME=/app.php \
-    SCRIPT_FILENAME=/app.php \
+    SCRIPT_NAME=/$APP_FILE \
+    SCRIPT_FILENAME=/$APP_FILE \
     REQUEST_METHOD=GET \
     cgi-fcgi -bind -connect 127.0.0.1:9000 || exit 1
