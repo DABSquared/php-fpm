@@ -265,7 +265,7 @@ WORKDIR "/var/www/symfony"
 EXPOSE 9000
 CMD ["php-fpm"]
 
-HEALTHCHECK --interval=10s --timeout=3s --retries=10 \
+HEALTHCHECK  --timeout=3s --retries=20 \
     CMD \
     SCRIPT_NAME=/ \
     SCRIPT_FILENAME=/var/www/symfony/$APP_FILE \
