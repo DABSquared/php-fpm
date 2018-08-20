@@ -4,7 +4,6 @@ shopt -s nullglob
 
 mkdir -p var/cache var/logs temp/
 
-bundle install --binstubs --no-cache
 rm -rf node_modules
 
 if [ "$ISDEV" == "true" ]; then
@@ -23,7 +22,7 @@ else
 fi
 
 if [ "$ASSECTIC" == "true" ]; then
-   php bin/console --env="$ENVIRONMENT" assetic:install web
+   php bin/console --env="$ENVIRONMENT" assets:install web
 fi
 
 if [ "$ASSECTIC" == "true" ]; then
