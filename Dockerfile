@@ -152,7 +152,7 @@ RUN apk add --no-cache --virtual .build-php autoconf gcc g++ make bzip2-dev libp
  	&& pecl install ssh2-1.0 && docker-php-ext-enable ssh2 \
  	&& pecl install redis && docker-php-ext-enable redis \
  	&& pecl install mcrypt-1.0.1 && docker-php-ext-enable mcrypt \
-# 	&& pecl install xdebug && docker-php-ext-enable xdebug \
+ 	&& pecl install xdebug && docker-php-ext-enable xdebug \
 	&& apk del .build-php
 
 
@@ -165,6 +165,7 @@ ENV TZ=Etc/GMT+7
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN date
 
+RUN sed -i 's/9000/3001/' /usr/local/etc/php-fpm.d/zz-docker.conf
 
 # enable xdebug
 RUN echo "error_reporting = E_ALL & ~E_NOTICE" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
@@ -196,7 +197,7 @@ RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
 
 WORKDIR /var/www/symfony
-EXPOSE 9000
+EXPOSE 3001
 CMD ["php-fpm"]
 
 HEALTHCHECK  --interval=15s --timeout=3s --retries=30 \
@@ -204,4 +205,4 @@ HEALTHCHECK  --interval=15s --timeout=3s --retries=30 \
    SCRIPT_NAME=/health \
    SCRIPT_FILENAME=/var/www/symfony/$APP_FILE \
    REQUEST_METHOD=GET \
-   cgi-fcgi -bind -connect 127.0.0.1:9000 || exit 1
+   cgi-fcgi -bind -connect 127.0.0.1:3001 || exit 1

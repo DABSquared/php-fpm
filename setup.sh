@@ -2,6 +2,12 @@
 set -eo pipefail
 shopt -s nullglob
 
+
+if [ -f "/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini" ]
+then
+    mv /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini /usr/local/etc/docker-php-ext-xdebug.ini
+fi
+
 mkdir -p var/cache var/logs temp/
 
 rm -rf node_modules
@@ -37,3 +43,8 @@ chmod -R 777 var/cache
 chmod -R 777 var/logs
 chmod -R 777 temp
 chmod -R 777 src/
+
+if [ -f "/usr/local/etc/docker-php-ext-xdebug.ini" ]
+then
+    mv /usr/local/etc/docker-php-ext-xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+fi
